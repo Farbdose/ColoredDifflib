@@ -2161,6 +2161,8 @@ def mark_pos(string, pos, add=True, no_space=False):
     return string
 
 def color_diff(a, b, linejunk=None, charjunk=IS_CHARACTER_JUNK):
+    a = "_#_"+a.replace("\n", "\n_#_")
+    b = "_#_"+b.replace("\n", "\n_#_")
     differ = Differ(linejunk, charjunk).compare(a.splitlines(), b.splitlines())
     res = ["\n%s" % row.strip() for row in differ ]
     index = len(res)-1
@@ -2168,7 +2170,7 @@ def color_diff(a, b, linejunk=None, charjunk=IS_CHARACTER_JUNK):
     while index>=0:
         line = res[index]
 
-        if line[0] != "$" and line[2] != " ":
+        if line[0] != "$" and len(line) > 2 and line[2] != " ":
             res[index] = line = ""
 
         if len(line)>1:
@@ -2198,7 +2200,7 @@ def color_diff(a, b, linejunk=None, charjunk=IS_CHARACTER_JUNK):
 
         index-=1
 
-    return "".join([line for line in res if line.strip() != ""]).strip()
+    return "".join([line.replace("_#_", "") for line in res if line.strip() != ""]).strip()
 
 
 def _test():
